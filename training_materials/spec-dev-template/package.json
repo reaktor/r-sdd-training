@@ -1,0 +1,23 @@
+{
+  "name": "spec-dev-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "typecheck": "concurrently \"npm run typecheck --workspace=backend\" \"npm run typecheck --workspace=frontend\"",
+    "lint": "npm run lint --workspace=frontend"
+  },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
+
