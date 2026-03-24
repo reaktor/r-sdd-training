@@ -83,3 +83,59 @@ docs/agents/             Agent persona definitions
 **New API endpoint:** Add route handler in `backend/src/index.ts`, add query/table/types in `backend/src/db.ts`
 **New frontend feature:** Add component in appropriate atomic level, wire into `App.tsx`, add API client in `frontend/src/api/`
 **Schema change:** Update `initializeDatabase()` and queries in `backend/src/db.ts`
+
+## Build Output
+
+- **Backend**: `backend/dist/` — compiled Node.js server. Run: `node backend/dist/index.js`
+- **Frontend**: `frontend/dist/` — static HTML/CSS/JS bundle. Preview: `npm run preview --workspace=frontend`
+
+## API Reference
+
+### Endpoints
+
+| Method | Path | Description | Success | Error |
+|--------|------|-------------|---------|-------|
+| GET | `/api/todos` | List all todos | 200 | 500 |
+| POST | `/api/todos` | Create a todo | 201 | 400, 500 |
+| GET | `/api/health` | Health check | 200 | — |
+
+### POST `/api/todos`
+
+Request body:
+```json
+{"title": "Buy milk", "description": "Optional details"}
+```
+
+Response (201):
+```json
+{"id": 1, "title": "Buy milk", "description": "Optional details", "completed": false, "created_at": "2025-10-24T14:32:00.000Z"}
+```
+
+```bash
+curl -X POST http://localhost:3000/api/todos \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Buy milk"}'
+```
+
+### Validation Rules
+
+- `title`: required, max 255 chars
+- `description`: optional, max 1000 chars
+- Invalid input returns 400 with error message
+
+### API Patterns
+
+- RESTful resource-based design, JSON request/response
+- Standard HTTP verbs: GET, POST, PUT, DELETE
+- Consistent error format across all endpoints
+
+## Troubleshooting
+
+| Problem | Error | Fix |
+|---------|-------|-----|
+| Port 3000 in use | `EPERM: operation not permitted 0.0.0.0:3000` | `pkill -f "node dist/index.js"` or `PORT=3001 npm run dev --workspace=backend` |
+| Port 5173 in use | Vite fails to start | Change `server.port` in `frontend/vite.config.ts` |
+| DB missing/corrupt | `SQLITE_CANTOPEN` or `no such table` | `rm -rf backend/data/ && npm run build --workspace=backend` |
+| Missing module | `Cannot find module 'express'` (or similar) | `rm -rf node_modules && npm install` |
+| TS export error | `TS4023: Exported variable has or is using name...` | Add explicit type annotation: `import type { X } from 'mod'; export const y: X = ...` |
+| Full clean restart | Everything broken | `rm -rf node_modules backend/dist backend/data frontend/dist && npm install && npm run build && npm run dev` |
