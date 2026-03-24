@@ -5,17 +5,35 @@ AI is Everyone and knows Everything
 
 ## Getting Started with AI Development
 
-This repo as some EXAMPLE_ files, you can check out the contents and use them as a starting point. Note that this is an exercise about spec driven development so don't spend time tweaking the PRD, focus on how to use AI to get the specs and implementation done.
+This repo has a docs folder with examlpe documents and specs, you can check out the contents and use them as a starting point. Note that this is an exercise about spec driven development so don't spend time tweaking the product requirement documents (PRD), focus on how to use AI to get the specs and implementation done.
 
 ## Get Coding
-Always check AI generated spec contents, it will do "comprehensive", "robust", "fault-tolerant" and "insert term" plans that are usually too much.  
+Always check AI generated spec contents, it might do "comprehensive", "robust", "fault-tolerant" and "insert term" plans that are usually too much.  
 
-1. You should have a PRD as to what the product should be. Example provided in `EXAMPLE_PRD.md`
-2. You will create `specs` out of the PRD, you can use the example spec as a template
-3. You will prompt AI to implement features according to `spec`
-4. Use different agent profiles for different tasks
-5. Create an agent profile of your perfect colleague
+1. You should have a PRD as to what the product should be. Example provided in `EXAMPLE-prd.md`
+2. You will create superpowers workflow to create the implementation.
 6. Play around, try to get a feel for it, there is no one correct solution.
+
+## Practical Workflow for Builders
+1. Have an idea for product
+2. Flesh out the idea into PRDs or similar high-level documentation
+3. Derive architecture from the PRDs
+4. Derive feature documents with PRD and architecture
+5. Derive implementation tasks from the feature doc
+6. Implement <-> Verify
+7. Release
+
+## Critical Points and Tips
+AI is non-deterministic by nature, it will hallucinate or do something stupid. It is critical to make sure that the documents used in prompting are kept clean of hallucinations, e.g. "audit trail" on one document will soon poison everything as you iterate and update the code and docs. Here are some guidelines:
+
+- **"Normalize" documents** so that each fact exists only once in one file
+- **Documents should only contain what must exist**, no speculation or guesses or extra
+- **Always clean documents**, define a prompt for that, run it often, see `cleanup-prompt.md`
+- **AI will make unnecessary edits**, see the point above
+- **AI will search for files** so it may help to have youre spec, types, openapi docs, UI components share a common file name like `authentication` or `shopping-cart`
+- **Context callback** if you're using e.g. personalities have them sign replies with something, once the reply starts vanishing you know context is getting lost.
+
+# General prompting tips
 
 ## Managing Context
 Managing context is everything and depends a lot on the model that is being used. In practice it would make sense to use larger reasoning models to work on the documentation and smaller tool-use models to do the implementation. Current understanding is that documentation should be roughly on three tiers: overview, functionality and tasks. It also seems the utilizing some documents in a system prompt manner and others as normal prompt yields the best outcome. 
@@ -46,21 +64,4 @@ And from this feature overview + some detail one should derive the tasks:
 5. Implement UI components and views
 6. Run gate/acceptance scenario, automated tests or manual
 
-## Practical Workflow for Builders
-1. Have an idea for product
-2. Flesh out the idea into PRDs or similar high-level documentation
-3. Derive architecture from the PRDs
-4. Derive feature documents with PRD and architecture
-5. Derive implementation tasks from the feature doc
-6. Implement <-> Verify
-7. Release
 
-## Critical Points and Tips
-AI is non-deterministic by nature, it will hallucinate or do something stupid. It is critical to make sure that the documents used in prompting are kept clean of hallucinations, e.g. "audit trail" on one document will soon poison everything as you iterate and update the code and docs. Here are some guidelines:
-
-- **"Normalize" documents** so that each fact exists only once in one file
-- **Documents should only contain what must exist**, no speculation or guesses or extra
-- **Always clean documents**, define a prompt for that, run it often, see `cleanup-prompt.md`
-- **AI will make unnecessary edits**, see the point above
-- **AI will search for files** so it may help to have youre spec, types, openapi docs, UI components share a common file name like `authentication` or `shopping-cart`
-- **Context callback** if you're using e.g. personalities have them sign replies with something, once the reply starts vanishing you know context is getting lost.
