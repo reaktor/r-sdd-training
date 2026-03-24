@@ -37,18 +37,18 @@ A collaborative, web-based task board for small teams to assign, track, and coor
 
 ### User Personas & Stories
 
-**Team Member**
+**Team Member (includes Team Leads)**
 
+* As a Team Member, I want to create tasks with a title, description, due date, and priority so that expectations are clear.
+* As a Team Member, I want to assign tasks to one or more team members so that ownership is unambiguous.
 * As a Team Member, I want to view all tasks assigned to me so that I can prioritize my daily workload.
+* As a Team Member, I want to change a task's status (To Do, In Progress, Blocked, Done) so that the team knows where things stand.
 * As a Team Member, I want to comment on a task so that I can ask questions or share progress without leaving the board.
-* As a Team Member, I want to mark a task as complete so that the team knows the work is done.
 * As a Team Member, I want to see tasks filtered by status or due date so that I can focus on what matters now.
 
 **Team Lead**
 
-* As a Team Lead, I want to create tasks with a title, description, due date, and priority so that expectations are clear.
-* As a Team Lead, I want to assign tasks to one or more team members so that ownership is unambiguous.
-* As a Team Lead, I want to see overdue tasks across the team so that I can address bottlenecks.
+* As a Team Lead, I want to see overdue and blocked tasks across the team so that I can address bottlenecks.
 * As a Team Lead, I want to create recurring tasks so that regular duties are not forgotten.
 * As a Team Lead, I want to drag and reorder tasks so that I can communicate priority visually.
 
@@ -71,7 +71,8 @@ A collaborative, web-based task board for small teams to assign, track, and coor
 * **Task Management** (Priority: High)
   * Create tasks with title (required), description, due date, priority (High / Medium / Low), and assignee(s).
   * Edit task details, reassign, or change deadlines.
-  * Mark tasks complete or reopen them.
+  * Change task status: To Do, In Progress, Blocked, Done.
+  * Reopen completed tasks.
   * Delete tasks (Admin and task creator only).
   * Assign tasks to one or more workspace members via autocomplete.
 * **Collaboration** (Priority: High)
@@ -107,7 +108,7 @@ A collaborative, web-based task board for small teams to assign, track, and coor
 
 **Core Experience**
 
-* **Step 1:** User logs in and lands on the workspace board showing all tasks organized by status (To Do, In Progress, Done).
+* **Step 1:** User logs in and lands on the workspace board showing all tasks organized by status (To Do, In Progress, Blocked, Done).
   * Clean layout with a prominent "Add Task" button.
   * Sidebar or top-nav shows workspace name, members, and filters.
 * **Step 2:** Team Lead creates a task.
@@ -119,7 +120,7 @@ A collaborative, web-based task board for small teams to assign, track, and coor
   * Assigned members receive in-app and email notification.
 * **Step 4:** Team Members work and communicate.
   * Comment thread under each task for questions, updates, and context.
-  * Status changes (To Do -> In Progress -> Done) give instant visual feedback.
+  * Status changes (To Do -> In Progress -> Blocked -> Done) give instant visual feedback.
   * Real-time sync ensures everyone sees the current state.
 * **Step 5:** Team Lead reviews progress.
   * Filter by assignee or status to focus the view.
@@ -189,95 +190,25 @@ Overdue items surface automatically, so Sarah spots a blocked task on Wednesday 
 
 ## Technical Considerations
 
-### Technical Needs
+### Architecture Constraints
 
-* RESTful API backend (Express) for authentication, workspace management, and task CRUD.
-* Relational database (SQLite for dev/small deployments, PostgreSQL for production scale) storing users, workspaces, tasks, comments, and permissions.
-* Front-end SPA (React) with real-time UI updates.
-* Real-time sync layer (WebSockets via Socket.IO or similar) for collaborative state.
+* RESTful API backend with JSON request/response for authentication, workspace management, and task CRUD.
+* Persistent relational storage for users, workspaces, tasks, comments, and permissions.
+* Single-page application frontend with a modern build toolchain.
+* Real-time sync layer for collaborative state across workspace members.
+* SSO/OAuth support for third-party authentication.
+* Transactional email delivery for invitations and notifications.
 
-### Integration Points
+### Data Model
 
-* OAuth / SSO provider for Google authentication.
-* SMTP or transactional email API (e.g., SendGrid, Postmark) for invitations and notifications.
-* Future: calendar sync (Google Calendar, Outlook), webhook integrations.
-
-### Data Storage & Privacy
-
-* Encrypted data in transit (TLS) and at rest.
-* GDPR-compliant handling: right to erasure for deleted users, data export on request.
-* Data access scoped by workspace membership and role.
-
-### Scalability & Performance
-
-* Stateless backend instances behind a load balancer for horizontal scaling.
-* Connection-based WebSocket management with message queue fallback (e.g., Redis pub/sub) for multi-instance sync.
-* Front-end optimized for sub-second initial load and instant optimistic UI updates.
+* Workspaces contain members (with roles) and tasks. Tasks have: title, description, status (To Do / In Progress / Blocked / Done), due date, priority, assignee(s), comments, and timestamps.
+* Data access is scoped by workspace membership and role. Workspace-level isolation must prevent cross-workspace data leakage.
+* The API must support filtering by assignee, status, due date, and priority, sorting by due date, priority, or creation time, and text search on title/description.
 
 ### Potential Challenges
 
-* Real-time concurrency: simultaneous edits to the same task require conflict resolution strategy.
-* Data isolation: strong workspace-level access control to prevent cross-workspace data leakage.
+* Real-time concurrency: simultaneous edits to the same task require a conflict resolution strategy.
 * Onboarding friction: first-use experience must be fast even under load.
 * Abuse prevention: rate limiting on workspace invites and task creation to prevent spam.
+* Data privacy: must support right to erasure for deleted users and data export on request.
 
----
-
-## Milestones & Sequencing
-
-### Project Estimate
-
-* **Medium-Large:** 3--5 weeks for MVP
-
-### Team Size & Composition
-
-* **Small Team:** 2--3 people
-  * 1--2 Full-stack engineers
-  * 1 PM/designer hybrid (requirements, UX flows, validation)
-
-### Suggested Phases
-
-**Phase 1: Core Platform (1.5 weeks)**
-
-* Key Deliverables:
-  * User authentication (email/password, Google SSO).
-  * Workspace creation and email-based invitations.
-  * Task CRUD with title, description, due date, priority.
-  * Basic board UI with status columns (To Do, In Progress, Done).
-* Dependencies:
-  * Auth provider, SMTP service.
-
-**Phase 2: Assignment & Collaboration (1 week)**
-
-* Key Deliverables:
-  * Task assignment to workspace members.
-  * Inline task comments.
-  * Real-time sync (WebSocket layer) for task and comment updates.
-  * Role-based permissions (Admin, Member).
-* Dependencies:
-  * WebSocket infrastructure.
-
-**Phase 3: Notifications, Filtering & Polish (1 week)**
-
-* Key Deliverables:
-  * In-app and email notifications for assignments, completions, and overdue tasks.
-  * Activity feed.
-  * Filtering by assignee, status, due date, priority. Sorting and search.
-  * Drag-and-drop reordering.
-  * Responsive design audit.
-  * Accessibility pass (ARIA labels, keyboard navigation, contrast).
-* Dependencies:
-  * Email notification service.
-
-**Phase 4: QA & Launch (up to 1 week)**
-
-* Key Deliverables:
-  * End-to-end testing of auth, workspace, task, and collaboration flows.
-  * Manual QA across browsers and screen sizes.
-  * Production deployment.
-  * Monitoring, error tracking, and metric dashboards.
-  * Collect early user feedback.
-* Dependencies:
-  * Hosting environment, monitoring tooling.
-
----
