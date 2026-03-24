@@ -4,7 +4,7 @@
 
 Install these if you don't have them:
 - **Git**: https://git-scm.com/downloads
-- **Node.js 18+** (includes npm): https://nodejs.org/
+- **Node.js 18–22** (includes npm): https://nodejs.org/
 - **Claude Code**: `npm install -g @anthropic-ai/claude-code`
 
 Verify:

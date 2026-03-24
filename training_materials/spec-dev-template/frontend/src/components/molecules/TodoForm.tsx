@@ -39,7 +39,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ onSubmit, isLoading = false }) => {
   const isDisabled = isSubmitting || isLoading;
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6">
+    <form onSubmit={(e) => void handleSubmit(e)} className="mb-6">
       <div className="bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
         <div className="mb-3">
           <Input

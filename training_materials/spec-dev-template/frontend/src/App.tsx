@@ -24,17 +24,12 @@ function TodosList() {
   };
 
   useEffect(() => {
-    loadTodos();
+    void loadTodos();
   }, []);
 
   const handleCreateTodo = async (title: string, description?: string) => {
-    try {
-      const newTodo = await createTodo({ title, description });
-      // Add new todo to the beginning of the list
-      setTodos([newTodo, ...todos]);
-    } catch (err) {
-      throw err;
-    }
+    const newTodo = await createTodo({ title, description });
+    setTodos([newTodo, ...todos]);
   };
 
   return (
