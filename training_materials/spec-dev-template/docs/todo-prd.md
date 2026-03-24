@@ -133,32 +133,17 @@ At the end of the week Alex filters to "Completed" to see everything accomplishe
 
 ## Technical Considerations
 
-### Technical Needs
+### Architecture Constraints
 
-* RESTful API backend (Express 4) with JSON request/response.
-* SQLite database (better-sqlite3) with persistent storage (no schema reset in production).
-* React 19 SPA with Vite 7 for build and dev server.
-* Tailwind CSS v4 for styling.
+* RESTful API backend with JSON request/response.
+* Persistent relational storage; schema must not reset in production.
+* Single-page application frontend with a modern build toolchain.
+* Utility-first CSS approach for consistent styling.
 
-### Schema
+### Data Model
 
-* Single `todos` table: id, title, description, completed, due_date, priority, created_at, updated_at.
-* Prepared statements for all queries.
-* Indexes on `completed`, `due_date`, and `priority` for filter/sort performance.
-
-### API Endpoints
-
-* `GET /api/todos` -- list all todos (supports query params for filter, sort, search).
-* `POST /api/todos` -- create a todo.
-* `PUT /api/todos/:id` -- update a todo.
-* `DELETE /api/todos/:id` -- delete a todo.
-* `PATCH /api/todos/:id/toggle` -- toggle completion status.
-* `GET /api/health` -- health check.
-
-### Data Persistence
-
-* Dev mode: schema recreated on server start (current behavior) for fast iteration.
-* Production mode: schema created only if tables do not exist; data persists across restarts.
+* Each todo has: title, description, completion status, optional due date, priority level, and creation/update timestamps.
+* The API must support filtering by completion status and priority, sorting by due date or creation date, and free-text search on title/description.
 
 ### Potential Challenges
 
