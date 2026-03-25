@@ -37,6 +37,25 @@ A single-user, web-based todo application for capturing, organizing, and complet
 
 ---
 
+## User Stories
+
+**User**
+
+* As a User, I want to create a task with a title so that I can capture something I need to do.
+* As a User, I want to add an optional description to a task so that I can record details or context.
+* As a User, I want to set a due date on a task so that I know when it needs to be finished.
+* As a User, I want to set a priority level (High, Medium, Low) so that I can distinguish urgent work from routine items.
+* As a User, I want to mark a task as complete so that I can see my progress.
+* As a User, I want to reopen a completed task so that I can correct a mistake.
+* As a User, I want to edit a task's title, description, due date, or priority so that I can keep it accurate as things change.
+* As a User, I want to delete a task so that I can remove things that are no longer relevant.
+* As a User, I want to filter tasks by status (all, active, completed) so that I can focus on what still needs doing.
+* As a User, I want to filter tasks by priority so that I can see only high-priority items.
+* As a User, I want to sort tasks by due date, priority, or creation date so that I can organize my view.
+* As a User, I want to search tasks by title or description so that I can find a specific item quickly.
+
+---
+
 ## Functional Requirements
 
 * **Task CRUD** (Priority: High)
