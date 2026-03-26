@@ -4,7 +4,7 @@ A full-stack starter template with React frontend + Express backend + SQLite dat
 
 ## Quick Start
 
-**Prerequisites:** Node.js 18+, npm 8+
+**Prerequisites:** Node.js 20+, npm 8+
 
 ```bash
 npm install    # Install all dependencies
